@@ -20,11 +20,22 @@ jobs:
 
       - name: Deploy to EC2
         run: |
+          # Ensure app folder exists, then clean old files
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
-            cd ~/app || mkdir ~/app && cd ~/app
+            mkdir -p ~/app && cd ~/app
             rm -rf *
           '
+
+          # Copy repo files to EC2
           scp -o StrictHostKeyChecking=no -r ./* ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/app
+
+          # Create .env on EC2 from GitHub Secret
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+            cd ~/app
+            echo '${{ secrets.ENV_FILE }}' > .env
+          "
+
+          # Run deploy script on EC2
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
             cd ~/app
             chmod +x deploy.sh
