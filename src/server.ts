@@ -20,7 +20,7 @@ app.use("/api", (req, res, next) => {
 
 app.use("/users", userRouter);
 
-app.get("/health", (req, res) => {
+app.get("/", (req, res) => {
   res.send({
     status: "OK",
     timestamp: new Date().toISOString(),
