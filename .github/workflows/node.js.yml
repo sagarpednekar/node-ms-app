@@ -21,10 +21,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.8.0
-      with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
     - name: Debug secret
       run: echo "${{ secrets.EC2_SSH_KEY }}" | head -n 5
           
