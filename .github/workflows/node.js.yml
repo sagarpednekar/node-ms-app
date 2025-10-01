@@ -20,9 +20,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: Debug secret
-      run: echo "${{ secrets.EC2_SSH_KEY }}" | head -n 5
           
     - name: Deploy to EC2
       run: |
