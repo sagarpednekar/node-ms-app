@@ -1,18 +1,14 @@
 #!/bin/bash
-set -e
+cd /home/ubuntu/myapp || exit
 
-APP_NAME="node-ms-app"
-PORT=8000
+# Pull latest code
+git pull origin main
 
-echo "Stopping old container (if any)..."
-docker stop $APP_NAME || true
-docker rm $APP_NAME || true
-docker rmi $APP_NAME || true
+# Install dependencies
+pnpm install --prod
 
-echo "Building new image..."
-docker build -t $APP_NAME .
+# Build (if you have a build step)
+pnpm run build
 
-echo "Starting new container..."
-docker run -d --name $APP_NAME -p $PORT:3000 --env-file .env $APP_NAME
-
-echo "✅ Deployment completed! App running on port $PORT"
+# Restart PM2
+pm2 restart backend-service || pm2 start ecosystem.config.js
