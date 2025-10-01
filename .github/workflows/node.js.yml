@@ -1,4 +1,4 @@
-name: Node.js CI/CD
+name: Node.js CI/CD (pnpm)
 
 on:
   push:
@@ -6,32 +6,35 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted   # this will target your EC2 runner
+    runs-on: self-hosted   # runs on your EC2 runner
 
     steps:
       # 1. Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Install dependencies (Node already installed on EC2)
+      # 2. Install dependencies with pnpm
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       # 3. Run lint
       - name: Run lint
-        run: npm run lint
+        run: pnpm lint
 
       # 4. Run tests
       - name: Run tests
-        run: npm test
+        run: pnpm test
 
       # 5. Build project
       - name: Build project
-        run: npm run build
+        run: pnpm build
 
-      # 6. Deploy using PM2
+      # 6. Deploy with PM2 (zero-downtime reload)
       - name: Deploy with PM2
         run: |
-          pm2 stop my-node-app || true
-          pm2 start dist/server.js --name backend-service
+          if pm2 list | grep -q my-node-app; then
+            pm2 reload my-node-app
+          else
+            pm2 start dist/server.js --name my-node-app
+          fi
           pm2 save
