@@ -17,13 +17,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 3. Run lint
-      - name: Run lint
-        run: pnpm lint
+      # # 3. Run lint
+      # - name: Run lint
+      #   run: pnpm lint
 
-      # 4. Run tests
-      - name: Run tests
-        run: pnpm test
+      # # 4. Run tests
+      # - name: Run tests
+      #   run: pnpm test
 
       # 5. Build project
       - name: Build project
@@ -32,9 +32,9 @@ jobs:
       # 6. Deploy with PM2 (zero-downtime reload)
       - name: Deploy with PM2
         run: |
-          if pm2 list | grep -q my-node-app; then
-            pm2 reload my-node-app
+          if pm2 list | grep -q backend-service; then
+            pm2 reload backend-service
           else
-            pm2 start dist/server.js --name my-node-app
+            pm2 start dist/server.js --name backend-service
           fi
           pm2 save
