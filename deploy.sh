@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/ubuntu/myapp || exit
+cd /home/ubuntu/app || exit
 
 # Pull latest code
 git pull origin main
