@@ -1,4 +1,6 @@
 import express from "express";
+import userRouter from "./routes/userRouter";
+import postRouter from "./routes/postRouter";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,7 +13,7 @@ async function startServer() {
 
 app.use(express.json());
 
-import userRouter from "./routes/userRouter";
+
 
 app.use("/api", (req, res, next) => {
   console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
@@ -19,6 +21,7 @@ app.use("/api", (req, res, next) => {
 }); 
 
 app.use("/users", userRouter);
+app.use("/posts", postRouter);
 
 app.get("/", (req, res) => {
   res.send({
